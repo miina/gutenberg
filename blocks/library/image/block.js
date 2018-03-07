@@ -2,6 +2,7 @@
  * External dependencies
  */
 import classnames from 'classnames';
+import { parse as hpqParse } from 'hpq';
 import ResizableBox from 're-resizable';
 import {
 	startCase,
@@ -28,6 +29,7 @@ import {
 /**
  * Internal dependencies
  */
+import { children } from '../../api/matchers';
 import RichText from '../../rich-text';
 import ImagePlaceholder from '../../image-placeholder';
 import MediaUpload from '../../media-upload';
@@ -94,7 +96,7 @@ class ImageBlock extends Component {
 	onSelectImage( media ) {
 		const attributes = { url: media.url, alt: media.alt, id: media.id };
 		if ( media.caption ) {
-			attributes.caption = [ media.caption ];
+			attributes.caption = hpqParse( media.caption, children() );
 		}
 		this.props.setAttributes( attributes );
 	}

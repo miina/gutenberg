@@ -2,6 +2,7 @@
  * External Dependencies
  */
 import { filter } from 'lodash';
+import { parse as hpqParse } from 'hpq';
 
 /**
  * WordPress dependencies
@@ -22,6 +23,7 @@ import {
 /**
  * Internal dependencies
  */
+import { children } from '../../api/matchers';
 import MediaUpload from '../../media-upload';
 import ImagePlaceholder from '../../image-placeholder';
 import InspectorControls from '../../inspector-controls';
@@ -86,7 +88,7 @@ class GalleryBlock extends Component {
 		this.props.setAttributes( {
 			images: images.map( ( attributes ) => ( {
 				...attributes,
-				caption: attributes.caption ? [ attributes.caption ] : [],
+				caption: hpqParse( attributes.caption, children() ),
 			} ) ),
 		} );
 	}
