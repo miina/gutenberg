@@ -262,17 +262,8 @@ export function* savePost( options = {} ) {
 		previousRecord.type,
 		previousRecord.id
 	);
-	debugger;
-	if ( error && error.message === 'test' ) {
-		const args = getNotificationArgumentsForSaveFail( {
-			post: previousRecord,
-			edits,
-			error,
-		} );
-		if ( args.length ) {
-			yield dispatch( 'core/notices', 'createErrorNotice', ...args );
-		}
-	} else if ( error ) {
+
+	if ( error && 'offline' === error.type ) {
 		const args = getNotificationArgumentsForOfflineSync( {
 			post: previousRecord,
 			edits,
@@ -283,6 +274,15 @@ export function* savePost( options = {} ) {
 		}
 		if ( ! options.isAutosave ) {
 			yield dispatch( 'core/block-editor', '__unstableMarkLastChangeAsPersistent' );
+		}
+	} else if ( error ) {
+		const args = getNotificationArgumentsForSaveFail( {
+			post: previousRecord,
+			edits,
+			error,
+		} );
+		if ( args.length ) {
+			yield dispatch( 'core/notices', 'createErrorNotice', ...args );
 		}
 	} else {
 		const updatedRecord = yield select( STORE_KEY, 'getCurrentPost' );
