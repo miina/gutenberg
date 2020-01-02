@@ -8,7 +8,7 @@ function gutenberg_register_offline_editing_service_worker_script( $scripts ) {
 	$scripts->register(
 		'gutenberg-offline-editing',
 		array(
-			'src'  => 'https://pwa.wordpress.test/wp-content/plugins/gutenberg/lib/offline-editing.js',
+			'src'  => plugin_dir_url( __FILE__ ) . 'offline-editing.js',
 			'deps' => array( 'wp-base-config' ),
 		)
 	);
