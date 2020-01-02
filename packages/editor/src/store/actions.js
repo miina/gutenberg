@@ -22,6 +22,7 @@ import {
 	getNotificationArgumentsForSaveSuccess,
 	getNotificationArgumentsForSaveFail,
 	getNotificationArgumentsForTrashFail,
+	getNotificationArgumentsForOfflineSync,
 } from './utils/notice-builder';
 import serializeBlocks from './utils/serialize-blocks';
 
@@ -261,7 +262,8 @@ export function* savePost( options = {} ) {
 		previousRecord.type,
 		previousRecord.id
 	);
-	if ( error ) {
+	debugger;
+	if ( error && error.message === 'test' ) {
 		const args = getNotificationArgumentsForSaveFail( {
 			post: previousRecord,
 			edits,
@@ -269,6 +271,18 @@ export function* savePost( options = {} ) {
 		} );
 		if ( args.length ) {
 			yield dispatch( 'core/notices', 'createErrorNotice', ...args );
+		}
+	} else if ( error ) {
+		const args = getNotificationArgumentsForOfflineSync( {
+			post: previousRecord,
+			edits,
+			error,
+		} );
+		if ( args.length ) {
+			yield dispatch( 'core/notices', 'createWarningNotice', ...args );
+		}
+		if ( ! options.isAutosave ) {
+			yield dispatch( 'core/block-editor', '__unstableMarkLastChangeAsPersistent' );
 		}
 	} else {
 		const updatedRecord = yield select( STORE_KEY, 'getCurrentPost' );

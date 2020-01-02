@@ -13,6 +13,20 @@ import { SAVE_POST_NOTICE_ID, TRASH_POST_NOTICE_ID } from '../constants';
  */
 import { get, includes } from 'lodash';
 
+export function getNotificationArgumentsForOfflineSync( data ) {
+	const { error } = data;
+	let noticeMessage = '';
+
+	// Check if message string contains HTML. Notice text is currently only
+	// supported as plaintext, and stripping the tags may muddle the meaning.
+	if ( error.message && ! ( /<\/?[^>]*>/.test( error.message ) ) ) {
+		noticeMessage = [ error.message ].join( ' ' );
+	}
+	return [ noticeMessage, {
+		id: SAVE_POST_NOTICE_ID,
+	} ];
+}
+
 /**
  * Builds the arguments for a success notification dispatch.
  *
