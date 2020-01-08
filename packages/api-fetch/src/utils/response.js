@@ -59,10 +59,6 @@ export function parseAndThrowError( response, shouldParseResponse = true ) {
 
 	return parseJsonAndNormalizeError( response )
 		.then( ( error ) => {
-			if ( 'test' === error.error ) {
-				debugger;
-				return response;
-			}
 			const unknownError = {
 				code: 'unknown_error',
 				message: __( 'An unknown error occurred.' ),
