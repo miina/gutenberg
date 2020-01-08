@@ -366,7 +366,7 @@ export function* saveEntityRecord(
 
 		// If we got to the point in the try block where we made an optimistic update,
 		// we need to roll it back here.
-		if ( persistedEntity && currentEdits ) {
+		if ( 'offline' !== error.type && persistedEntity && currentEdits ) {
 			yield receiveEntityRecords( kind, name, persistedEntity, undefined, true );
 			yield editEntityRecord(
 				kind,

@@ -22,6 +22,7 @@ import {
 	getNotificationArgumentsForSaveSuccess,
 	getNotificationArgumentsForSaveFail,
 	getNotificationArgumentsForTrashFail,
+	getNotificationArgumentsForOfflineSync,
 } from './utils/notice-builder';
 import serializeBlocks from './utils/serialize-blocks';
 
@@ -261,7 +262,20 @@ export function* savePost( options = {} ) {
 		previousRecord.type,
 		previousRecord.id
 	);
-	if ( error ) {
+
+	if ( error && 'offline' === error.type ) {
+		const args = getNotificationArgumentsForOfflineSync( {
+			post: previousRecord,
+			edits,
+			error,
+		} );
+		if ( args.length ) {
+			yield dispatch( 'core/notices', 'createWarningNotice', ...args );
+		}
+		if ( ! options.isAutosave ) {
+			yield dispatch( 'core/block-editor', '__unstableMarkLastChangeAsPersistent' );
+		}
+	} else if ( error ) {
 		const args = getNotificationArgumentsForSaveFail( {
 			post: previousRecord,
 			edits,

@@ -94,8 +94,8 @@ const defaultFetchHandler = ( nextOptions ) => {
 					.then( ( response ) => parseResponseAndNormalizeError( response, parse ) ),
 			() => {
 				throw {
-					code: 'fetch_error',
-					message: __( 'You are probably offline.' ),
+					type: 'offline',
+					message: __( 'You do not have an internet connection, however, your changes will be synced once back online. Previewing and some editing is not available when offline.' ),
 				};
 			}
 		);
